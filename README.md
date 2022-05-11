@@ -1,2 +1,2 @@
 # simple_shell
-Collaborative project with Brayan Mwanyumba.
+This repo contains a c program that creates a simple shell when executed.
