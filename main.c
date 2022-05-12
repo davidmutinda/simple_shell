@@ -9,7 +9,7 @@
  *
  * Return: void
  */
-void shell(void)
+void shell(char *av[])
 {
 	size_t len, ch;
 	char *av[4];
@@ -40,7 +40,7 @@ void shell(void)
 	{
 		if (execve(av[0], av, NULL) == -1)
 		{
-			perror("Command not found");
+			perror("%s", av[0]);
 			exit(0);
 		}
 	}
@@ -52,9 +52,12 @@ void shell(void)
  *
  * Return: Always 0
  */
-int main(void)
+int main(int ac, char *av[])
 {
-	shell();
+	if (ac < 1)
+		exit(0);
+
+	shell(av);
 
 	return (0);
 }
