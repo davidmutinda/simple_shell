@@ -18,7 +18,7 @@ void shell(char *argv[])
 	pid_t child;
 	int status, result;
 
-	printf("#cisfun$ ");
+	printf("($) ");
 	ch = getline(&str, &len, stdin);
 	if (str[0] == '\n')
 		shell(argv);
@@ -26,10 +26,8 @@ void shell(char *argv[])
 	str[ch - 1] = '\0';
 	result = strcmp(str, "exit");
 	if (result == 0)
-	{
-		printf("$ exiting the shell\n");
 		exit(0);
-	}
+
 	for (string = str; ; string = NULL, i++)
 	{
 		token = strtok(string, " ");
