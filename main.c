@@ -20,6 +20,8 @@ void shell(char *argv[])
 
 	printf("#cisfun$ ");
 	ch = getline(&str, &len, stdin);
+	if (str[0] == '\n')
+		shell(argv);
 
 	str[ch - 1] = '\0';
 	result = strcmp(str, "exit");
