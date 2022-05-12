@@ -20,11 +20,7 @@ void shell(void)
 
 	printf("#cisfun$ ");
 	ch = getline(&str, &len, stdin);
-	if (ch == -1)
-	{
-		perror("Error getting line\n");
-		exit(1);
-	}
+
 	str[ch - 1] = '\0';
 	result = strcmp(str, "exit");
 	if (result == 0)
@@ -34,10 +30,10 @@ void shell(void)
 	}
 	for (string = str; ; string = NULL, i++)
 	{
-	token = strtok(string, " ");
-	av[i] = token;
-	if (token == NULL)
-		break;
+		token = strtok(string, " ");
+		av[i] = token;
+		if (token == NULL)
+			break;
 	}
 	child = fork();
 	if (child == 0)
