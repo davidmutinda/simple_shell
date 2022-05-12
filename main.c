@@ -6,10 +6,10 @@
 #include <string.h>
 /**
  * shell - checks and executes commands entered
- *
+ * @argv: argument vector
  * Return: void
  */
-void shell(char *av[])
+void shell(char *argv[])
 {
 	size_t len, ch;
 	char *av[4];
@@ -40,24 +40,25 @@ void shell(char *av[])
 	{
 		if (execve(av[0], av, NULL) == -1)
 		{
-			perror("%s", av[0]);
+			perror(argv[0]);
 			exit(0);
 		}
 	}
 	wait(&status);
-	shell();
+	shell(argv);
 }
 /**
  * main - entry point
- *
+ * @argc: argument count
+ * @argv: argument vector
  * Return: Always 0
  */
-int main(int ac, char *av[])
+int main(int argc, char *argv[])
 {
-	if (ac < 1)
+	if (argc < 1)
 		exit(0);
 
-	shell(av);
+	shell(argv);
 
 	return (0);
 }
