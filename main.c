@@ -1,9 +1,4 @@
-#include <stdio.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <sys/wait.h>
-#include <string.h>
+#include "main.h"
 /**
  * check_env - checks if argument is environment variable
  * @av: pointer to strings
