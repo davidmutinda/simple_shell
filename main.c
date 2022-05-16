@@ -5,6 +5,47 @@
 #include <sys/wait.h>
 #include <string.h>
 /**
+ * check_env - checks if argument is environment variable
+ * @av: pointer to strings
+ * Return: void
+ */
+void check_env(char **av)
+{
+	char *new;
+	int i = 1, j = 0;
+
+
+	new = malloc(sizeof(char) * strlen(av[1]));
+	while (av[1][i] != '\0')
+	{
+		new[j] = av[1][i];
+		i++;
+		j++;
+	}
+	av[1] = getenv(new);
+	free(new);
+}
+/**
+ * child_process - creates a child process to execute user input
+ * @av: pointer to strings
+ * @argv: argument vector
+ * Return: void
+ */
+void child_process(char **av, char **argv)
+{
+	pid_t child;
+
+	child = fork(); /*creates child process*/
+	if (child == 0) /*return value of fork() in child process is always 0*/
+	{ /*child process automatically terminates if execve() is successful*/
+		if (execve(av[0], av, NULL) == -1)
+		{ /*program enters this block if execve() fails*/
+			perror(argv[0]);
+			exit(0);/*exits from the child process*/
+		}
+	}
+}
+/**
  * shell - checks and executes commands entered
  * @argv: argument vector
  * Return: void
@@ -14,9 +55,7 @@ void shell(char *argv[])
 	size_t len, ch;
 	char *av[4]; /*stores arguments for the execve() function*/
 	char *token, *string, *str = NULL;
-	int i = 0;
-	pid_t child;
-	int status, result;
+	int i = 0, status, result;
 
 	printf("($) ");
 	ch = getline(&str, &len, stdin); /*gets the characters that the user inputs*/
@@ -35,15 +74,19 @@ void shell(char *argv[])
 		if (token == NULL)
 			break;
 	}
-	child = fork(); /*creates child process*/
-	if (child == 0) /*return value of fork() in child process is always 0*/
-	{ /*child process automatically terminates if execve() is successful*/
-		if (execve(av[0], av, NULL) == -1)
-		{ /*program enters this block if execve() fails*/
-			perror(argv[0]);
-			exit(0);/*exits from the child process*/
+	if (av[1] != NULL)
+	{
+		if (av[1][0] == '$')
+		{
+			check_env(av);
+			if (av[1] == NULL)
+			{
+				perror("Variable not found");
+				shell(argv);
+			}
 		}
 	}
+	child_process(av, argv);
 	wait(&status); /*parent process waits for child process to be executed first*/
 	shell(argv); /*program is called again and waits for user input*/
 }
