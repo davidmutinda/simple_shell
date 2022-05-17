@@ -1,25 +1,26 @@
 #include "main.h"
+
 /**
- * check_env - checks if argument is environment variable
+ * get_env - gets value of environment variable
  * @av: pointer to strings
  * Return: void
  */
-void check_env(char **av)
+void get_env(char **av)
 {
 	char *new;
 	int i = 1, j = 0;
 
-
 	new = malloc(sizeof(char) * strlen(av[1]));
 	while (av[1][i] != '\0')
-	{
+	{/*copies content from av[1][i] to new starting from av[1][1]*/
 		new[j] = av[1][i];
 		i++;
 		j++;
 	}
-	av[1] = getenv(new);
+	av[1] = getenv(new);/*copies value of environment variable to av[1]*/
 	free(new);
 }
+
 /**
  * child_process - creates a child process to execute user input
  * @av: pointer to strings
@@ -40,6 +41,7 @@ void child_process(char **av, char **argv)
 		}
 	}
 }
+
 /**
  * shell - checks and executes commands entered
  * @argv: argument vector
@@ -54,8 +56,10 @@ void shell(char *argv[])
 
 	printf("($) ");
 	ch = getline(&str, &len, stdin); /*gets the characters that the user inputs*/
-	if (str[0] == '\n')
+	if (*str == '\n' || *str == EOF)
+	{
 		shell(argv);
+	}
 
 	str[ch - 1] = '\0'; /*changes str[ch - 1] from '\n' and '\0'*/
 	result = strcmp(str, "exit");
@@ -73,7 +77,7 @@ void shell(char *argv[])
 	{
 		if (av[1][0] == '$')
 		{
-			check_env(av);
+			get_env(av);
 			if (av[1] == NULL)
 			{
 				perror("Variable not found");
@@ -85,6 +89,7 @@ void shell(char *argv[])
 	wait(&status); /*parent process waits for child process to be executed first*/
 	shell(argv); /*program is called again and waits for user input*/
 }
+
 /**
  * main - entry point
  * @argc: argument count
@@ -93,9 +98,9 @@ void shell(char *argv[])
  */
 int main(int argc, char *argv[])
 {
-	if (argc != 1)
+	if (argc < 1)
 	{
-		printf("Usage: %s\n", argv[0]);
+		perror("Wrong usage");
 		exit(0);
 	}
 
