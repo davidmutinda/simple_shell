@@ -6,7 +6,6 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <sys/types.h>
-#include <string.h>
 #include <signal.h>
 
 extern char **environ;
