@@ -37,7 +37,7 @@ void child_process(char **av, char **argv)
 		if (execve(av[0], av, NULL) == -1)
 		{ /*program enters this block if execve() fails*/
 			perror(argv[0]);
-			exit(0);/*exits from the child process*/
+			exit(EXIT_FAILURE);/*exits from the child process*/
 		}
 	}
 }
@@ -62,7 +62,7 @@ void shell(char *argv[], char **environ)
 	str[ch - 1] = '\0'; /*changes str[ch - 1] from '\n' and '\0'*/
 	result = strcmp(str, "exit");
 	if (result == 0) /*if the user keys in "exit" the program is exited*/
-		exit(0);
+		exit(EXIT_SUCCESS);
 	for (string = str; ; string = NULL, i++)
 	{ /*this loop separates the string into words*/
 		token = strtok(string, " ");
@@ -104,7 +104,7 @@ int main(int argc, char *argv[], char **environ)
 	if (argc < 1)
 	{
 		perror("Wrong usage");
-		exit(0);
+		exit(EXIT_FAILURE);
 	}
 
 	shell(argv, environ);

@@ -6,11 +6,18 @@
  */
 void print_env(char **environ)
 {
-	int count = 0;
+	int count = 0, i;
+	char new = '\n';
 
 	while (environ[count])
 	{
-		printf("%s\n", environ[count]);
+		i = 0;
+		while (environ[count][i] != '\0')
+		{
+			write(1, &environ[count][i], 1);
+			i++;
+		}
+		write(1, &new, 1);
 		count++;
 	}
 }
