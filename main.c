@@ -10,14 +10,14 @@ void get_env(char **av)
 	char *new;
 	int i = 1, j = 0;
 
-	new = malloc(sizeof(char) * strlen(av[1]));
+	new = malloc(sizeof(char) * _strlen(av[1]));
 	while (av[1][i] != '\0')
 	{/*copies content from av[1][i] to new starting from av[1][1]*/
 		new[j] = av[1][i];
 		i++;
 		j++;
 	}
-	av[1] = getenv(new);/*copies value of environment variable to av[1]*/
+	av[1] = _getenv(new);/*copies value of environment variable to av[1]*/
 	free(new);
 }
 
@@ -60,7 +60,7 @@ void shell(char *argv[], char **environ)
 	if (*str == '\n' || *str == EOF)
 		shell(argv, environ);
 	str[ch - 1] = '\0'; /*changes str[ch - 1] from '\n' and '\0'*/
-	result = strcmp(str, "exit");
+	result = _strcmp(str, "exit");
 	if (result == 0) /*if the user keys in "exit" the program is exited*/
 		exit(EXIT_SUCCESS);
 	for (string = str; ; string = NULL, i++)
@@ -79,7 +79,7 @@ void shell(char *argv[], char **environ)
 				shell(argv, environ);
 		}
 	}
-	else if (!strcmp(av[0], "env"))
+	else if (!_strcmp(av[0], "env"))
 	{
 		print_env(environ);
 		shell(argv, environ);
