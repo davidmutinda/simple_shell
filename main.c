@@ -30,7 +30,7 @@ void shell(char *argv[])
 {
 	size_t len, ch;
 	char *av[4]; /*stores arguments for the execve() function*/
-	char *token, *string, *str = NULL;
+	char *token, *string, *str = NULL, bin[5] = "/bin/";
 	int i = 0, status, result;
 
 	write(1, "($) ", 4);
@@ -48,15 +48,20 @@ void shell(char *argv[])
 		if (token == NULL)
 			break;
 	}
+	if (!_strcmp(av[0], "env"))
+	{
+		print_env(environ);
+		shell(argv);
+	}
+	else if (av[0][0] != '/')
+	{
+		av[0] = strcat(bin, av[0]);
+	}
+
 	if (av[1] != NULL)
 	{
 		if (av[1][0] == '$')/*checks for environment variables*/
 			av[1] = _getenv(av[1]);/*copies value of environment variable to av[1]*/
-	}
-	else if (!_strcmp(av[0], "env"))
-	{
-		print_env(environ);
-		shell(argv);
 	}
 	child_process(av, argv); /*creates child process*/
 	wait(&status); /*parent process waits for child process to be executed first*/
