@@ -1,27 +1,6 @@
 #include "main.h"
 
 /**
- * get_env - gets value of environment variable
- * @av: pointer to strings
- * Return: void
- */
-void get_env(char **av)
-{
-	char *new;
-	int i = 1, j = 0;
-
-	new = malloc(sizeof(char) * _strlen(av[1]));
-	while (av[1][i] != '\0')
-	{/*copies content from av[1][i] to new starting from av[1][1]*/
-		new[j] = av[1][i];
-		i++;
-		j++;
-	}
-	av[1] = _getenv(new);/*copies value of environment variable to av[1]*/
-	free(new);
-}
-
-/**
  * child_process - creates a child process to execute user input
  * @av: pointer to strings
  * @argv: argument vector
@@ -45,10 +24,9 @@ void child_process(char **av, char **argv)
 /**
  * shell - checks and executes commands entered
  * @argv: argument vector
- * @environ: pointer to environment variables
  * Return: void
  */
-void shell(char *argv[], char **environ)
+void shell(char *argv[])
 {
 	size_t len, ch;
 	char *av[4]; /*stores arguments for the execve() function*/
@@ -58,7 +36,7 @@ void shell(char *argv[], char **environ)
 	write(1, "($) ", 4);
 	ch = getline(&str, &len, stdin); /*gets the characters that the user inputs*/
 	if (*str == '\n' || *str == EOF)
-		shell(argv, environ);
+		shell(argv);
 	str[ch - 1] = '\0'; /*changes str[ch - 1] from '\n' and '\0'*/
 	result = _strcmp(str, "exit");
 	if (result == 0) /*if the user keys in "exit" the program is exited*/
@@ -74,29 +52,28 @@ void shell(char *argv[], char **environ)
 	{
 		if (av[1][0] == '$')/*checks for environment variables*/
 		{
-			get_env(av);
+			av[1] = _getenv(av[1]);/*copies value of environment variable to av[1]*/
 			if (av[1] == NULL)
-				shell(argv, environ);
+				shell(argv);
 		}
 	}
 	else if (!_strcmp(av[0], "env"))
 	{
 		print_env(environ);
-		shell(argv, environ);
+		shell(argv);
 	}
 	child_process(av, argv); /*creates child process*/
 	wait(&status); /*parent process waits for child process to be executed first*/
-	shell(argv, environ); /*program is called again and waits for user input*/
+	shell(argv); /*program is called again and waits for user input*/
 }
 
 /**
  * main - entry point
  * @argc: argument count
  * @argv: argument vector
- * @environ: pointer to environment variables
  * Return: Always 0
  */
-int main(int argc, char *argv[], char **environ)
+int main(int argc, char *argv[])
 {
 	if (argc < 1)
 	{
@@ -104,7 +81,7 @@ int main(int argc, char *argv[], char **environ)
 		exit(EXIT_FAILURE);
 	}
 
-	shell(argv, environ);
+	shell(argv);
 
 	return (0);
 }
