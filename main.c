@@ -54,9 +54,7 @@ void shell(char *argv[])
 		shell(argv);
 	}
 	else if (av[0][0] != '/')
-	{
-		av[0] = strcat(bin, av[0]);
-	}
+		av[0] = _strcat(bin, av[0]);
 
 	if (av[1] != NULL)
 	{
