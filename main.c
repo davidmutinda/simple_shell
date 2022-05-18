@@ -51,11 +51,7 @@ void shell(char *argv[])
 	if (av[1] != NULL)
 	{
 		if (av[1][0] == '$')/*checks for environment variables*/
-		{
 			av[1] = _getenv(av[1]);/*copies value of environment variable to av[1]*/
-			if (av[1] == NULL)
-				shell(argv);
-		}
 	}
 	else if (!_strcmp(av[0], "env"))
 	{
