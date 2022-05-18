@@ -54,8 +54,10 @@ void shell(char *argv[], char **environ)
 	char *av[4]; /*stores arguments for the execve() function*/
 	char *token, *string, *str = NULL;
 	int i = 0, status, result;
+	char dollar = '$', space = ' ';
 
-	printf("($) ");
+	write(1, &dollar, 1);
+	write(1, &space, 1);
 	ch = getline(&str, &len, stdin); /*gets the characters that the user inputs*/
 	if (*str == '\n' || *str == EOF)
 		shell(argv, environ);
@@ -76,10 +78,7 @@ void shell(char *argv[], char **environ)
 		{
 			get_env(av);
 			if (av[1] == NULL)
-			{/*program enters this block if getenv() fails*/
-				perror("Variable not found");
 				shell(argv, environ);
-			}
 		}
 	}
 	else if (!strcmp(av[0], "env"))
