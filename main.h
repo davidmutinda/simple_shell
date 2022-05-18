@@ -6,4 +6,5 @@
 #include <sys/wait.h>
 #include <sys/types.h>
 #include <string.h>
+void print_env(char **environ);
 #endif

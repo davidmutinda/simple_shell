@@ -45,9 +45,10 @@ void child_process(char **av, char **argv)
 /**
  * shell - checks and executes commands entered
  * @argv: argument vector
+ * @environ: pointer to environment variables
  * Return: void
  */
-void shell(char *argv[])
+void shell(char *argv[], char **environ)
 {
 	size_t len, ch;
 	char *av[4]; /*stores arguments for the execve() function*/
@@ -57,15 +58,11 @@ void shell(char *argv[])
 	printf("($) ");
 	ch = getline(&str, &len, stdin); /*gets the characters that the user inputs*/
 	if (*str == '\n' || *str == EOF)
-	{
-		shell(argv);
-	}
-
+		shell(argv, environ);
 	str[ch - 1] = '\0'; /*changes str[ch - 1] from '\n' and '\0'*/
 	result = strcmp(str, "exit");
 	if (result == 0) /*if the user keys in "exit" the program is exited*/
 		exit(0);
-
 	for (string = str; ; string = NULL, i++)
 	{ /*this loop separates the string into words*/
 		token = strtok(string, " ");
@@ -75,28 +72,34 @@ void shell(char *argv[])
 	}
 	if (av[1] != NULL)
 	{
-		if (av[1][0] == '$')
+		if (av[1][0] == '$')/*checks for environment variables*/
 		{
 			get_env(av);
 			if (av[1] == NULL)
-			{
+			{/*program enters this block if getenv() fails*/
 				perror("Variable not found");
-				shell(argv);
+				shell(argv, environ);
 			}
 		}
 	}
-	child_process(av, argv);
+	else if (!strcmp(av[0], "env"))
+	{
+		print_env(environ);
+		shell(argv, environ);
+	}
+	child_process(av, argv); /*creates child process*/
 	wait(&status); /*parent process waits for child process to be executed first*/
-	shell(argv); /*program is called again and waits for user input*/
+	shell(argv, environ); /*program is called again and waits for user input*/
 }
 
 /**
  * main - entry point
  * @argc: argument count
  * @argv: argument vector
+ * @environ: pointer to environment variables
  * Return: Always 0
  */
-int main(int argc, char *argv[])
+int main(int argc, char *argv[], char **environ)
 {
 	if (argc < 1)
 	{
@@ -104,7 +107,7 @@ int main(int argc, char *argv[])
 		exit(0);
 	}
 
-	shell(argv);
+	shell(argv, environ);
 
 	return (0);
 }
