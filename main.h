@@ -9,9 +9,10 @@
 #include <string.h>
 #include <signal.h>
 
-
+extern char **environ;
 extern int exitcode;
 extern int errorcount;
+char *_getenv(char *token);
 
 /* check_helpers */
 int exit_check(char *user_input, char *NAME);
