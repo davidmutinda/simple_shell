@@ -8,7 +8,6 @@ char *_getenv(char *token)
 {
 	int count = 0, i;
 	char *string;
-	char new = '\n';
 
 	string = malloc(sizeof(char) * 10);
 	token += 1;
@@ -28,6 +27,5 @@ char *_getenv(char *token)
 		}
 		count++;
 	}
-	write (1, &new, 1);
 	return (NULL);
 }
